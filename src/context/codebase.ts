@@ -28,12 +28,13 @@ const LANGUAGE_MAP: Record<string, string> = {
   '.swift': 'swift'
 };
 
-export function analyzeFileStructure(workspaceRoot: string, maxDepth = 3): FileStructure {
+export function analyzeFileStructure(workspaceRoot: string, maxDepth = 3, maxFiles = 100): FileStructure {
   const files: string[] = [];
   const directories: string[] = [];
+  let fileCount = 0;
 
   function traverse(dir: string, depth: number) {
-    if (depth > maxDepth) return;
+    if (depth > maxDepth || fileCount >= maxFiles) return;
 
     try {
       const entries = readdirSync(dir);
@@ -55,7 +56,10 @@ export function analyzeFileStructure(workspaceRoot: string, maxDepth = 3): FileS
             directories.push(fullPath);
             traverse(fullPath, depth + 1);
           } else if (stat.isFile() && CODE_EXTENSIONS.has(extname(entry))) {
-            files.push(fullPath);
+            if (fileCount < maxFiles) {
+              files.push(fullPath);
+              fileCount++;
+            }
           }
         } catch {
           // Ignore permission errors
