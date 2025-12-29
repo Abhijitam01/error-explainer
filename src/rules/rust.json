@@ -1,0 +1,53 @@
+{
+  "BorrowCheckerError": {
+    "what": "Attempted to use a value after it was moved or borrowed",
+    "why": "Rust's ownership system prevents multiple mutable references or using moved values",
+    "fix": [
+      "Clone the value if you need to use it multiple times",
+      "Use references (&) instead of moving values",
+      "Restructure code to avoid conflicting borrows",
+      "Consider using Rc<RefCell<T>> for shared mutable ownership"
+    ]
+  },
+  "LifetimeError": {
+    "what": "Value does not live long enough for its reference",
+    "why": "Reference outlives the value it points to, causing potential use-after-free",
+    "fix": [
+      "Extend the lifetime of the referenced value",
+      "Use owned values instead of references",
+      "Add explicit lifetime parameters to functions",
+      "Restructure code to ensure values live long enough"
+    ]
+  },
+  "TypeMismatch": {
+    "what": "Type does not match expected type",
+    "why": "Rust is strictly typed and requires exact type matches",
+    "fix": [
+      "Check the expected type in the error message",
+      "Use type conversion (as, into, try_into)",
+      "Update function signature to accept the correct type",
+      "Verify generic type parameters are correct"
+    ]
+  },
+  "Panic": {
+    "what": "Program panicked at runtime",
+    "why": "Unrecoverable error occurred, often from unwrap(), expect(), or array bounds",
+    "fix": [
+      "Replace unwrap() with proper error handling (Result, Option)",
+      "Add bounds checking before array access",
+      "Use match or if let for Option/Result values",
+      "Add validation before operations that can panic"
+    ]
+  },
+  "CargoError": {
+    "what": "Cargo build or dependency error",
+    "why": "Build system failed, often due to missing dependencies or compilation errors",
+    "fix": [
+      "Run 'cargo clean' and rebuild",
+      "Check Cargo.toml for correct dependencies",
+      "Update Rust toolchain: rustup update",
+      "Verify all dependencies are compatible"
+    ]
+  }
+}
+

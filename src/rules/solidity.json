@@ -1,0 +1,53 @@
+{
+  "CompilationError": {
+    "what": "Solidity compilation failed",
+    "why": "Syntax error, type mismatch, or missing declaration",
+    "fix": [
+      "Check the file and line number in error message",
+      "Verify all imports are correct",
+      "Check for missing semicolons or brackets",
+      "Ensure variable types match their usage"
+    ]
+  },
+  "RevertError": {
+    "what": "Transaction reverted",
+    "why": "Contract logic caused revert, often from require() or revert() statement",
+    "fix": [
+      "Check the revert reason in the error message",
+      "Verify all require() conditions are met",
+      "Review contract logic for revert conditions",
+      "Check if contract state allows the operation"
+    ]
+  },
+  "RequireError": {
+    "what": "require() statement failed",
+    "why": "Condition in require() was false",
+    "fix": [
+      "Check the require condition that failed",
+      "Verify inputs meet the requirement",
+      "Review contract state before the require",
+      "Add better error messages to require() statements"
+    ]
+  },
+  "GasError": {
+    "what": "Gas estimation failed or limit exceeded",
+    "why": "Transaction requires more gas than available or estimated",
+    "fix": [
+      "Increase gas limit in transaction",
+      "Optimize contract code to reduce gas usage",
+      "Break transaction into smaller operations",
+      "Check for infinite loops or excessive storage operations"
+    ]
+  },
+  "DeploymentError": {
+    "what": "Contract deployment failed",
+    "why": "Constructor failed, insufficient gas, or network issue",
+    "fix": [
+      "Check constructor parameters are correct",
+      "Increase gas limit for deployment",
+      "Verify network connection",
+      "Check contract bytecode size limits"
+    ]
+  }
+}
+

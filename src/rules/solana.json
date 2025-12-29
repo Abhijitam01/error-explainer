@@ -1,0 +1,53 @@
+{
+  "AnchorError": {
+    "what": "Anchor framework error occurred",
+    "why": "Program constraint violation, account validation failed, or instruction error",
+    "fix": [
+      "Check the specific AnchorError variant in the error message",
+      "Verify account constraints match the program expectations",
+      "Ensure all required accounts are provided",
+      "Check account data matches expected format"
+    ]
+  },
+  "TransactionError": {
+    "what": "Solana transaction failed",
+    "why": "Transaction was rejected by the network or program",
+    "fix": [
+      "Check transaction logs for specific error code",
+      "Verify sufficient SOL for transaction fees",
+      "Ensure all accounts are writable if needed",
+      "Check program instruction data is correct"
+    ]
+  },
+  "AccountValidationError": {
+    "what": "Account validation failed",
+    "why": "Account doesn't have required keys, signatures, or permissions",
+    "fix": [
+      "Verify account is signer if required",
+      "Check account has correct owner program",
+      "Ensure account is writable if modifying data",
+      "Verify account has sufficient balance"
+    ]
+  },
+  "InstructionError": {
+    "what": "Program instruction execution failed",
+    "why": "Instruction data invalid, program logic error, or constraint violation",
+    "fix": [
+      "Check instruction index in error message",
+      "Verify instruction data format matches program expectations",
+      "Review program logs for specific constraint failure",
+      "Ensure all instruction accounts are correct"
+    ]
+  },
+  "NetworkError": {
+    "what": "Failed to connect to Solana network",
+    "why": "RPC endpoint unreachable, network issue, or invalid cluster",
+    "fix": [
+      "Check RPC endpoint URL is correct",
+      "Verify network connectivity",
+      "Try a different RPC endpoint",
+      "Check if using correct cluster (mainnet, devnet, testnet)"
+    ]
+  }
+}
+

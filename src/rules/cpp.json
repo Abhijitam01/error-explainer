@@ -1,0 +1,53 @@
+{
+  "CompilationError": {
+    "what": "C/C++ compilation failed",
+    "why": "Source code has syntax errors, type mismatches, or missing declarations",
+    "fix": [
+      "Check the file and line number in the error message",
+      "Verify all includes are present and correct",
+      "Check for missing semicolons, brackets, or parentheses",
+      "Ensure variable types match their usage"
+    ]
+  },
+  "LinkerError": {
+    "what": "Linker cannot find function or symbol definition",
+    "why": "Function declared but not defined, or object file not linked",
+    "fix": [
+      "Ensure all source files are compiled and linked",
+      "Check that function definitions exist",
+      "Verify library paths and library names in linker flags",
+      "Check for name mangling issues (extern \"C\" for C functions)"
+    ]
+  },
+  "SegmentationFault": {
+    "what": "Program accessed invalid memory",
+    "why": "Dereferenced null pointer, accessed out-of-bounds array, or use-after-free",
+    "fix": [
+      "Use debugger (gdb) to find the exact location",
+      "Check all pointer dereferences for null",
+      "Verify array bounds before access",
+      "Use address sanitizer: -fsanitize=address"
+    ]
+  },
+  "TemplateError": {
+    "what": "C++ template instantiation or syntax error",
+    "why": "Template parameters don't match, missing template keyword, or syntax error",
+    "fix": [
+      "Check template parameter types match requirements",
+      "Add 'template' keyword before dependent names",
+      "Verify template specialization syntax",
+      "Check for missing 'typename' in dependent types"
+    ]
+  },
+  "MemoryError": {
+    "what": "Memory corruption or invalid access detected",
+    "why": "Use-after-free, buffer overflow, or double-free detected by sanitizers",
+    "fix": [
+      "Review the sanitizer output for exact location",
+      "Check all memory allocations and deallocations",
+      "Use smart pointers (unique_ptr, shared_ptr) instead of raw pointers",
+      "Enable all sanitizers: -fsanitize=address,undefined"
+    ]
+  }
+}
+

@@ -4,13 +4,14 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { runCommand } from './runner.js';
-import { detectStack } from './detector.js';
-import { parseJavaScriptError } from './parser/javascript.js';
-import { parseNextJSError } from './parser/nextjs.js';
-import { parseMongoError } from './parser/mongo.js';
-import { parsePostgresError } from './parser/postgres.js';
+import { registry } from './core/registry.js';
+import { loadAllPlugins } from './plugins/index.js';
 import { explainError } from './explainer.js';
+import type { ParsedError, Explanation } from './core/types.js';
 import chalk from 'chalk';
+
+// Load all plugins on startup
+loadAllPlugins();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,8 +25,10 @@ function showHelp() {
   console.log('  explain node script.js');
   console.log('  explain next dev\n');
   console.log('Options:');
-  console.log('  --help, -h     Show this help message');
-  console.log('  --version, -v  Show version number\n');
+  console.log('  --help, -h        Show this help message');
+  console.log('  --version, -v     Show version number');
+  console.log('  --json, -j        Output in JSON format');
+  console.log('  --format <fmt>   Output format: text, json, markdown\n');
   console.log('Environment Variables:');
   console.log('  GEMINI_API_KEY  API key for AI-powered explanations (optional)');
 }
@@ -38,6 +41,36 @@ function showVersion() {
   } catch {
     console.log('1.0.0');
   }
+}
+
+function getOutputFormat(args: string[]): 'text' | 'json' | 'markdown' {
+  const formatIndex = args.indexOf('--format');
+  if (formatIndex !== -1 && args[formatIndex + 1]) {
+    const format = args[formatIndex + 1].toLowerCase();
+    if (format === 'json' || format === 'markdown' || format === 'text') {
+      return format as 'text' | 'json' | 'markdown';
+    }
+  }
+  if (args.includes('--json') || args.includes('-j')) {
+    return 'json';
+  }
+  return 'text';
+}
+
+function outputJSON(parsedError: ParsedError, explanation: Explanation | null, exitCode: number | null): void {
+  const output = {
+    error: {
+      stack: parsedError.stack,
+      type: parsedError.errorType,
+      message: parsedError.message,
+      file: parsedError.file,
+      line: parsedError.line,
+      context: parsedError.context
+    },
+    explanation: explanation || null,
+    exitCode: exitCode
+  };
+  console.log(JSON.stringify(output, null, 2));
 }
 
 async function main() {
@@ -54,18 +87,36 @@ async function main() {
     process.exit(0);
   }
 
+  const outputFormat = getOutputFormat(args);
+  // Remove format flags from args before running command
+  const commandArgs = args.filter((arg, i) => 
+    arg !== '--json' && arg !== '-j' && 
+    arg !== '--format' && (i === 0 || args[i - 1] !== '--format')
+  );
+
   // Run the command
   let stdout: string;
   let stderr: string;
   let exitCode: number | null;
   
   try {
-    const result = await runCommand(args);
+    const result = await runCommand(commandArgs);
     stdout = result.stdout;
     stderr = result.stderr;
     exitCode = result.exitCode;
   } catch (error) {
-    console.error(chalk.red('❌ Failed to execute command:'), error instanceof Error ? error.message : String(error));
+    if (outputFormat === 'json') {
+      console.log(JSON.stringify({
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+          type: 'CommandExecutionError'
+        },
+        explanation: null,
+        exitCode: 1
+      }, null, 2));
+    } else {
+      console.error(chalk.red('❌ Failed to execute command:'), error instanceof Error ? error.message : String(error));
+    }
     process.exit(1);
   }
   
@@ -80,33 +131,33 @@ async function main() {
   // Combine stdout and stderr for detection
   const errorOutput = stderr || stdout || 'Unknown error occurred';
   
-  // Detect stack
-  const stack = detectStack(errorOutput);
-  
-  // Parse error based on stack
-  let parsedError;
-  switch (stack) {
-    case 'javascript':
-      parsedError = parseJavaScriptError(errorOutput);
-      break;
-    case 'nextjs':
-      parsedError = parseNextJSError(errorOutput);
-      break;
-    case 'mongo':
-      parsedError = parseMongoError(errorOutput);
-      break;
-    case 'postgres':
-      parsedError = parsePostgresError(errorOutput);
-      break;
-    default:
-      // For unknown stack, use javascript parser as fallback
-      parsedError = parseJavaScriptError(errorOutput);
-  }
+  // Use registry to detect and parse error
+  const parsedError = registry.parseError(errorOutput);
 
   // Explain the error
   const explanation = await explainError(parsedError);
 
-  // Pretty-print output
+  // Save to history
+  const { errorHistory } = await import('./features/history.js');
+  errorHistory.add(parsedError, explanation, commandArgs.join(' '));
+
+  // Check for similar errors
+  const similar = errorHistory.findSimilar(parsedError);
+  if (similar.length > 0 && similar[0].count > 1) {
+    // Show note about recurring error
+    if (outputFormat !== 'json') {
+      console.log(chalk.yellow(`\n⚠️  You've seen this error ${similar[0].count} time(s) before\n`));
+    }
+  }
+
+  // Output in requested format
+  if (outputFormat === 'json') {
+    outputJSON(parsedError, explanation, exitCode);
+    process.exit(exitCode || 1);
+    return;
+  }
+
+  // Pretty-print output (text format)
   console.log();
   
   // Error type in red
@@ -127,6 +178,10 @@ async function main() {
   // Message if available
   if (parsedError.message) {
     console.log(chalk.gray(`   ${parsedError.message}`));
+  } else if (errorOutput && errorOutput !== 'Unknown error occurred') {
+    // Show original error if no message was parsed
+    const errorLines = errorOutput.split('\n').filter(l => l.trim()).slice(0, 3);
+    console.log(chalk.gray(`   ${errorLines.join('\n   ')}`));
   }
   
   console.log();
