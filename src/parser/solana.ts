@@ -11,6 +11,10 @@ export function parseSolanaError(stderr: string): ParsedSolanaError {
     stack: "solana"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Anchor errors
   const anchorErrorMatch = stderr.match(/AnchorError:\s*(.+?)(?:\n|$)/);
   if (anchorErrorMatch) {

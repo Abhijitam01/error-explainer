@@ -10,6 +10,10 @@ export function parseRustError(stderr: string): ParsedRustError {
     stack: "rust"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Rust compiler error codes: error[E0382], error[E0425], etc.
   const errorCodeMatch = stderr.match(/error\[E(\d+)\]/);
   if (errorCodeMatch) {

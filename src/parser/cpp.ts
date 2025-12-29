@@ -11,6 +11,10 @@ export function parseCppError(stderr: string): ParsedCppError {
     stack: "cpp"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Detect compiler
   if (stderr.includes('gcc') || stderr.includes('g++')) {
     result.compiler = 'gcc';

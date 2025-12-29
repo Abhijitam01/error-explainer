@@ -12,6 +12,10 @@ export function parseNextJSError(stderr: string): ParsedNextJSError {
     stack: "nextjs"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Hydration error detection
   const hydrationMatch = stderr.match(/hydration\s+(?:failed|error|mismatch)/i);
   if (hydrationMatch) {

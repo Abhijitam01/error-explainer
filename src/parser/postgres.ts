@@ -12,6 +12,10 @@ export function parsePostgresError(stderr: string): ParsedPostgresError {
     stack: "postgres"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Relation does not exist error
   const relationNotFoundMatch = stderr.match(/relation\s+["']?([^"']+)["']?\s+does\s+not\s+exist/i);
   if (relationNotFoundMatch) {

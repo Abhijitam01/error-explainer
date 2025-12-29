@@ -10,6 +10,10 @@ export function parseSolidityError(stderr: string): ParsedSolidityError {
     stack: "solidity"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Solidity compiler errors
   const solcErrorMatch = stderr.match(/Error:\s*(.+?)(?:\n|$)/);
   if (solcErrorMatch) {

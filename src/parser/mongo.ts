@@ -12,6 +12,10 @@ export function parseMongoError(stderr: string): ParsedMongoError {
     stack: "mongo"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Connection refused error
   const connectionRefusedMatch = stderr.match(/connection\s+refused/i);
   if (connectionRefusedMatch) {
