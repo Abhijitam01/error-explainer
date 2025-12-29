@@ -49,10 +49,8 @@ async function main() {
       parsedError = parsePostgresError(errorOutput);
       break;
     default:
-      parsedError = {
-        stack: 'unknown' as const,
-        message: errorOutput
-      };
+      // For unknown stack, use javascript parser as fallback
+      parsedError = parseJavaScriptError(errorOutput);
   }
 
   // Explain the error
