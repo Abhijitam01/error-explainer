@@ -19,18 +19,27 @@ const __dirname = dirname(__filename);
 function showHelp() {
   console.log(chalk.bold('error-explain - AI-powered error explanation tool\n'));
   console.log('Usage:');
-  console.log('  explain <command>     Run command and explain any errors\n');
+  console.log('  explain <command>        Run command and explain any errors');
+  console.log('  explain --history        Show error history');
+  console.log('  explain --stats          Show error statistics');
+  console.log('  explain --context        Show context analysis for last error\n');
   console.log('Examples:');
   console.log('  explain npm run build');
   console.log('  explain node script.js');
   console.log('  explain next dev\n');
   console.log('Options:');
-  console.log('  --help, -h        Show this help message');
-  console.log('  --version, -v     Show version number');
-  console.log('  --json, -j        Output in JSON format');
-  console.log('  --format <fmt>   Output format: text, json, markdown\n');
+  console.log('  --help, -h           Show this help message');
+  console.log('  --version, -v        Show version number');
+  console.log('  --json, -j           Output in JSON format');
+  console.log('  --format <fmt>       Output format: text, json, markdown');
+  console.log('  --history            Show error history');
+  console.log('  --stats              Show error statistics');
+  console.log('  --context            Show context analysis');
+  console.log('  --fix                Show and apply fixes interactively\n');
   console.log('Environment Variables:');
-  console.log('  GEMINI_API_KEY  API key for AI-powered explanations (optional)');
+  console.log('  GEMINI_API_KEY       API key for Gemini AI');
+  console.log('  OPENAI_API_KEY       API key for OpenAI');
+  console.log('  ANTHROPIC_API_KEY    API key for Anthropic Claude');
 }
 
 function showVersion() {
@@ -87,6 +96,20 @@ async function main() {
     process.exit(0);
   }
 
+  // Handle history command
+  if (args[0] === '--history') {
+    const { showHistory } = await import('./commands/history.js');
+    showHistory(parseInt(args[1]) || 10);
+    process.exit(0);
+  }
+
+  // Handle stats command
+  if (args[0] === '--stats') {
+    const { showStats } = await import('./commands/stats.js');
+    showStats();
+    process.exit(0);
+  }
+
   const outputFormat = getOutputFormat(args);
   // Remove format flags from args before running command
   const commandArgs = args.filter((arg, i) => 
@@ -134,8 +157,9 @@ async function main() {
   // Use registry to detect and parse error
   const parsedError = registry.parseError(errorOutput);
 
-  // Explain the error
-  const explanation = await explainError(parsedError);
+  // Explain the error with context
+  const workspaceRoot = process.cwd();
+  const explanation = await explainError(parsedError, workspaceRoot);
 
   // Save to history
   const { errorHistory } = await import('./features/history.js');
@@ -205,8 +229,52 @@ async function main() {
     if (explanation.fix.length > 0) {
       console.log(chalk.green.bold('✅ How to fix:'));
       for (const fix of explanation.fix) {
-        console.log(chalk.green(`  • ${fix}`));
+        if (typeof fix === 'string') {
+          console.log(chalk.green(`  • ${fix}`));
+        } else {
+          // Structured fix suggestion
+          const priorityColor = fix.priority === 'high' ? chalk.red : fix.priority === 'medium' ? chalk.yellow : chalk.gray;
+          console.log(priorityColor(`  • [${fix.priority.toUpperCase()}] ${fix.description}`));
+          if (fix.code) {
+            console.log(chalk.gray(`    Code fix:`));
+            console.log(chalk.gray(`    ${fix.code.split('\n').map(l => '    ' + l).join('\n')}`));
+          }
+          if (fix.file) {
+            console.log(chalk.gray(`    File: ${fix.file}${fix.line ? `:${fix.line}` : ''}`));
+          }
+        }
       }
+    }
+    
+    // Code examples if available
+    if (explanation.codeExamples && explanation.codeExamples.length > 0) {
+      console.log();
+      console.log(chalk.bold('Code Examples:'));
+      for (const example of explanation.codeExamples) {
+        if (example.before && example.after) {
+          console.log(chalk.gray('  Before:'));
+          console.log(chalk.red(`  ${example.before.split('\n').map(l => '  ' + l).join('\n')}`));
+          console.log(chalk.gray('  After:'));
+          console.log(chalk.green(`  ${example.after.split('\n').map(l => '  ' + l).join('\n')}`));
+        }
+      }
+    }
+    
+    // Prevention tips if available
+    if (explanation.preventionTips && explanation.preventionTips.length > 0) {
+      console.log();
+      console.log(chalk.bold('Prevention Tips:'));
+      for (const tip of explanation.preventionTips) {
+        console.log(chalk.blue(`  • ${tip}`));
+      }
+    }
+    
+    // Confidence score if available
+    if (explanation.confidence !== undefined && outputFormat === 'text') {
+      const confidenceBar = '█'.repeat(Math.floor(explanation.confidence * 10));
+      const confidenceColor = explanation.confidence > 0.8 ? chalk.green : explanation.confidence > 0.6 ? chalk.yellow : chalk.red;
+      console.log();
+      console.log(chalk.gray(`Confidence: ${confidenceColor(confidenceBar)} ${(explanation.confidence * 100).toFixed(0)}%`));
     }
   }
   
