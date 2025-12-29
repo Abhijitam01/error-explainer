@@ -31,9 +31,27 @@ export interface ErrorParser {
   parse: (errorOutput: string) => ParsedError;
 }
 
+export interface FixSuggestion {
+  description: string;
+  code?: string; // Actual code fix
+  file?: string; // File to modify
+  line?: number; // Line number
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface CodeExample {
+  before: string;
+  after: string;
+  description?: string;
+}
+
 export interface Explanation {
   what: string;
   why: string;
-  fix: string[];
+  fix: string[] | FixSuggestion[]; // Support both old format and new format
+  relatedErrors?: string[];
+  preventionTips?: string[];
+  codeExamples?: CodeExample[];
+  confidence?: number; // 0-1
 }
 
