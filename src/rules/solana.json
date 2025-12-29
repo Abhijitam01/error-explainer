@@ -6,7 +6,10 @@
       "Check the specific AnchorError variant in the error message",
       "Verify account constraints match the program expectations",
       "Ensure all required accounts are provided",
-      "Check account data matches expected format"
+      "Check account data matches expected format",
+      "Verify account ownership is correct",
+      "Check account mutability constraints",
+      "Review Anchor program constraints"
     ]
   },
   "TransactionError": {
@@ -16,7 +19,10 @@
       "Check transaction logs for specific error code",
       "Verify sufficient SOL for transaction fees",
       "Ensure all accounts are writable if needed",
-      "Check program instruction data is correct"
+      "Check program instruction data is correct",
+      "Verify transaction size is within limits",
+      "Check for duplicate transactions",
+      "Verify recent blockhash is valid"
     ]
   },
   "AccountValidationError": {
@@ -26,7 +32,10 @@
       "Verify account is signer if required",
       "Check account has correct owner program",
       "Ensure account is writable if modifying data",
-      "Verify account has sufficient balance"
+      "Verify account has sufficient balance",
+      "Check account data length matches expected",
+      "Verify account is initialized",
+      "Check account discriminator is correct"
     ]
   },
   "InstructionError": {
@@ -36,7 +45,10 @@
       "Check instruction index in error message",
       "Verify instruction data format matches program expectations",
       "Review program logs for specific constraint failure",
-      "Ensure all instruction accounts are correct"
+      "Ensure all instruction accounts are correct",
+      "Check instruction data serialization",
+      "Verify instruction program ID is correct",
+      "Check for instruction size limits"
     ]
   },
   "NetworkError": {
@@ -46,8 +58,107 @@
       "Check RPC endpoint URL is correct",
       "Verify network connectivity",
       "Try a different RPC endpoint",
-      "Check if using correct cluster (mainnet, devnet, testnet)"
+      "Check if using correct cluster (mainnet, devnet, testnet)",
+      "Verify RPC endpoint is operational",
+      "Check for rate limiting on RPC",
+      "Use local validator for testing"
+    ]
+  },
+  "ProgramError": {
+    "what": "Solana program execution error",
+    "why": "Program returned error code or panicked",
+    "fix": [
+      "Check program error code in logs",
+      "Review program source code for error conditions",
+      "Verify program logic handles all cases",
+      "Check for integer overflow/underflow",
+      "Verify account data is valid",
+      "Check program instruction handler",
+      "Review program constraints and validations"
+    ]
+  },
+  "InsufficientFunds": {
+    "what": "Insufficient SOL for transaction",
+    "why": "Account doesn't have enough SOL for fees or rent",
+    "fix": [
+      "Add SOL to the account: solana airdrop",
+      "Check account balance before transaction",
+      "Reduce transaction size to lower fees",
+      "Verify rent-exempt minimum balance",
+      "Check for fee payer account balance",
+      "Use smaller transaction if possible"
+    ]
+  },
+  "AccountNotFound": {
+    "what": "Account not found on chain",
+    "why": "Account address is invalid or account doesn't exist",
+    "fix": [
+      "Verify account address (public key) is correct",
+      "Check if account needs to be created first",
+      "Verify account exists on the cluster",
+      "Check for typos in account address",
+      "Ensure account is initialized",
+      "Verify account hasn't been closed"
+    ]
+  },
+  "InvalidOwner": {
+    "what": "Account owner is invalid",
+    "why": "Account is owned by wrong program or not owned by expected program",
+    "fix": [
+      "Verify account owner program ID is correct",
+      "Check if account needs to be initialized",
+      "Verify program can modify the account",
+      "Check account was created by correct program",
+      "Verify PDA derivation is correct",
+      "Check for account ownership transfer issues"
+    ]
+  },
+  "PDAError": {
+    "what": "Program Derived Address (PDA) error",
+    "why": "PDA derivation failed or PDA account issue",
+    "fix": [
+      "Verify PDA seeds are correct",
+      "Check PDA derivation function",
+      "Ensure program ID matches",
+      "Verify PDA account exists or create it",
+      "Check PDA bump seed is correct",
+      "Verify PDA address calculation"
+    ]
+  },
+  "RentError": {
+    "what": "Rent exemption error",
+    "why": "Account doesn't meet rent exemption requirements",
+    "fix": [
+      "Add more SOL to account for rent",
+      "Check account data size vs rent requirements",
+      "Verify account is rent-exempt",
+      "Calculate required rent: getMinimumBalanceForRentExemption",
+      "Close account if no longer needed",
+      "Reduce account data size if possible"
+    ]
+  },
+  "SerializationError": {
+    "what": "Account or instruction data serialization error",
+    "why": "Data format doesn't match expected structure",
+    "fix": [
+      "Check data serialization format matches program",
+      "Verify Anchor account struct matches",
+      "Check Borsh serialization is correct",
+      "Verify data length matches expected",
+      "Check for endianness issues",
+      "Review account data layout"
+    ]
+  },
+  "ComputeBudgetError": {
+    "what": "Transaction exceeded compute budget",
+    "why": "Program used more compute units than allowed",
+    "fix": [
+      "Optimize program to use less compute",
+      "Set higher compute budget if appropriate",
+      "Break transaction into smaller operations",
+      "Reduce program instruction complexity",
+      "Check for infinite loops in program",
+      "Use compute budget instructions"
     ]
   }
 }
-

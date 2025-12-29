@@ -12,6 +12,10 @@ export function parseJavaScriptError(stderr: string): ParsedJavaScriptError {
     stack: "javascript"
   };
 
+  if (!stderr || typeof stderr !== 'string') {
+    return result;
+  }
+
   // Match error type: ReferenceError, TypeError, SyntaxError, etc.
   const errorTypeMatch = stderr.match(/^(\w+Error):/m);
   if (errorTypeMatch) {

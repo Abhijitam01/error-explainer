@@ -7,7 +7,9 @@
       "Use useEffect for client-only code",
       "Avoid Date.now() or Math.random() in render",
       "Check for conditional rendering based on client state",
-      "Use suppressHydrationWarning only as last resort"
+      "Use suppressHydrationWarning only as last resort",
+      "Ensure server and client use same data sources",
+      "Check for timezone differences affecting dates"
     ]
   },
   "ModuleNotFound": {
@@ -18,7 +20,10 @@
       "Ensure the file exists at the specified location",
       "Install missing npm packages: npm install <package>",
       "Check if using .js extension when needed (or remove it)",
-      "Verify tsconfig.json paths configuration"
+      "Verify tsconfig.json paths configuration",
+      "Check for case sensitivity issues (Linux vs Windows)",
+      "Restart Next.js dev server after installing packages",
+      "Clear .next cache: rm -rf .next"
     ]
   },
   "ServerClientMismatch": {
@@ -29,8 +34,128 @@
       "Use 'use server' for server-only code",
       "Move client-only logic to useEffect hooks",
       "Check for environment-specific code (process.env, window checks)",
-      "Ensure consistent data fetching on both server and client"
+      "Ensure consistent data fetching on both server and client",
+      "Use dynamic imports with ssr: false for client-only components"
+    ]
+  },
+  "BuildError": {
+    "what": "Next.js build failed",
+    "why": "Compilation error, missing dependencies, or configuration issue",
+    "fix": [
+      "Check the specific error in build output",
+      "Verify all dependencies are installed",
+      "Clear .next folder: rm -rf .next",
+      "Check next.config.js for errors",
+      "Verify TypeScript configuration if using TS",
+      "Check for syntax errors in pages/components",
+      "Ensure all environment variables are set"
+    ]
+  },
+  "APIError": {
+    "what": "API route error in Next.js",
+    "why": "Error in API route handler or middleware",
+    "fix": [
+      "Check API route handler for errors",
+      "Verify request/response handling",
+      "Check middleware configuration",
+      "Verify HTTP method is correct (GET, POST, etc.)",
+      "Check for CORS issues",
+      "Verify API route file is in correct location (pages/api or app/api)"
+    ]
+  },
+  "ImageError": {
+    "what": "Next.js Image component error",
+    "why": "Invalid image source, missing optimization, or configuration issue",
+    "fix": [
+      "Verify image source URL is correct",
+      "Check next.config.js image domains configuration",
+      "Ensure image is accessible and valid format",
+      "Use next/image instead of <img> tag",
+      "Check image dimensions are specified",
+      "Verify image optimization is enabled"
+    ]
+  },
+  "DynamicRouteError": {
+    "what": "Error in dynamic route or catch-all route",
+    "why": "Invalid route parameter or missing route file",
+    "fix": [
+      "Check dynamic route file naming: [param].js or [...slug].js",
+      "Verify route parameters are accessed correctly",
+      "Check for conflicting static and dynamic routes",
+      "Verify getStaticPaths returns correct paths",
+      "Check for missing getStaticProps or getServerSideProps"
+    ]
+  },
+  "MiddlewareError": {
+    "what": "Error in Next.js middleware",
+    "why": "Middleware syntax error, runtime error, or configuration issue",
+    "fix": [
+      "Check middleware.ts/js file for syntax errors",
+      "Verify middleware is in correct location (root or src)",
+      "Check middleware matcher configuration",
+      "Ensure middleware exports default function",
+      "Verify middleware doesn't use Node.js-only APIs",
+      "Check for infinite redirects"
+    ]
+  },
+  "FontError": {
+    "what": "Font loading error in Next.js",
+    "why": "Invalid font configuration or missing font files",
+    "fix": [
+      "Check next/font import and configuration",
+      "Verify font files exist in public folder",
+      "Check font family name is correct",
+      "Verify font format is supported",
+      "Check for CORS issues with external fonts",
+      "Ensure font is properly imported in _app.js or layout"
+    ]
+  },
+  "EnvironmentError": {
+    "what": "Environment variable or configuration error",
+    "why": "Missing or invalid environment variable",
+    "fix": [
+      "Check .env.local or .env file exists",
+      "Verify environment variable names (NEXT_PUBLIC_ prefix for client)",
+      "Restart dev server after adding env variables",
+      "Check for typos in variable names",
+      "Verify variables are loaded: console.log(process.env)",
+      "Check next.config.js env configuration"
+    ]
+  },
+  "TypeScriptError": {
+    "what": "TypeScript compilation error in Next.js",
+    "why": "Type errors, missing types, or TS configuration issue",
+    "fix": [
+      "Check TypeScript error message for specific issue",
+      "Verify @types packages are installed",
+      "Check tsconfig.json configuration",
+      "Add type assertions if needed: as Type",
+      "Check for missing type definitions",
+      "Verify strict mode settings if too strict"
+    ]
+  },
+  "SSRError": {
+    "what": "Server-side rendering error",
+    "why": "Error during SSR execution or data fetching",
+    "fix": [
+      "Check getServerSideProps or getStaticProps for errors",
+      "Verify data fetching logic",
+      "Check for browser-only APIs in SSR code",
+      "Add error handling in data fetching",
+      "Verify API endpoints are accessible from server",
+      "Check for async/await issues in SSR functions"
+    ]
+  },
+  "StaticGenerationError": {
+    "what": "Static site generation error",
+    "why": "Error during build-time static generation",
+    "fix": [
+      "Check getStaticProps for errors",
+      "Verify getStaticPaths returns valid paths",
+      "Check for dynamic data in static pages",
+      "Add fallback: 'blocking' or 'true' if needed",
+      "Verify all required data is available at build time",
+      "Check for missing revalidate configuration"
     ]
   }
 }
-

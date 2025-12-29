@@ -7,7 +7,9 @@
       "Verify connection string (host, port) is correct",
       "Check if MongoDB is listening on expected port (default: 27017)",
       "Verify firewall/network allows connection",
-      "Test connection with mongosh or MongoDB Compass"
+      "Test connection with mongosh or MongoDB Compass",
+      "Check MongoDB logs for errors",
+      "Verify MongoDB is installed and running"
     ]
   },
   "AuthenticationFailed": {
@@ -18,7 +20,9 @@
       "Check if user exists: db.getUsers()",
       "Create user if missing: db.createUser()",
       "Verify user has required roles/permissions",
-      "Check connection string format: mongodb://user:pass@host:port/db"
+      "Check connection string format: mongodb://user:pass@host:port/db",
+      "Reset password if needed: db.changeUserPassword()",
+      "Check authentication database is correct"
     ]
   },
   "SchemaValidationError": {
@@ -29,8 +33,129 @@
       "Verify field types match schema (string, number, date, etc.)",
       "Ensure required fields are present",
       "Check field value constraints (min/max, pattern, enum)",
-      "Review collection validation rules: db.getCollectionInfos()"
+      "Review collection validation rules: db.getCollectionInfos()",
+      "Update document to match schema requirements",
+      "Modify schema validation rules if needed"
+    ]
+  },
+  "DuplicateKeyError": {
+    "what": "Duplicate key error on insert or update",
+    "why": "Trying to insert document with duplicate unique index value",
+    "fix": [
+      "Check which field has duplicate value",
+      "Use updateOne with upsert instead of insertOne",
+      "Remove duplicate document first",
+      "Change unique index if duplicates are allowed",
+      "Use findOneAndUpdate with upsert option",
+      "Check for existing document before insert"
+    ]
+  },
+  "WriteConcernError": {
+    "what": "Write operation failed due to write concern",
+    "why": "Write couldn't be confirmed by required number of nodes",
+    "fix": [
+      "Check replica set status: rs.status()",
+      "Verify write concern settings",
+      "Ensure enough replica set members are available",
+      "Lower write concern requirements if appropriate",
+      "Check network connectivity to replica set",
+      "Verify replica set is healthy"
+    ]
+  },
+  "NetworkTimeoutError": {
+    "what": "MongoDB operation timed out",
+    "why": "Operation took too long or connection lost",
+    "fix": [
+      "Increase connection timeout in driver settings",
+      "Check network latency and stability",
+      "Optimize query performance (add indexes)",
+      "Check if database is overloaded",
+      "Verify connection pool settings",
+      "Check for long-running operations blocking"
+    ]
+  },
+  "IndexError": {
+    "what": "Index creation or usage error",
+    "why": "Invalid index definition, duplicate index, or index conflict",
+    "fix": [
+      "Check index definition syntax",
+      "Verify index doesn't already exist",
+      "Drop conflicting index first",
+      "Check index key fields exist in collection",
+      "Verify index options are valid",
+      "Use createIndex with unique option correctly"
+    ]
+  },
+  "QueryError": {
+    "what": "MongoDB query syntax or execution error",
+    "why": "Invalid query syntax, type mismatch, or query too complex",
+    "fix": [
+      "Check query syntax matches MongoDB query language",
+      "Verify field names exist in collection",
+      "Check data types match query operators",
+      "Simplify complex queries",
+      "Add indexes for query fields",
+      "Use explain() to analyze query performance"
+    ]
+  },
+  "TransactionError": {
+    "what": "MongoDB transaction failed",
+    "why": "Transaction conflict, timeout, or abort",
+    "fix": [
+      "Check transaction timeout settings",
+      "Retry transaction if it's a conflict",
+      "Verify all operations in transaction are valid",
+      "Check for concurrent transaction conflicts",
+      "Ensure replica set supports transactions",
+      "Check transaction isolation level"
+    ]
+  },
+  "BSONError": {
+    "what": "BSON serialization/deserialization error",
+    "why": "Invalid BSON data or type conversion issue",
+    "fix": [
+      "Check data types match BSON requirements",
+      "Verify dates are valid Date objects",
+      "Check for circular references in documents",
+      "Ensure ObjectIds are valid format",
+      "Check for NaN or Infinity values",
+      "Validate data before serialization"
+    ]
+  },
+  "CursorError": {
+    "what": "MongoDB cursor error",
+    "why": "Cursor expired, invalid, or operation on closed cursor",
+    "fix": [
+      "Check cursor hasn't been closed",
+      "Verify cursor timeout settings",
+      "Re-execute query if cursor expired",
+      "Check for cursor iteration errors",
+      "Use toArray() for small result sets",
+      "Handle cursor errors with try/catch"
+    ]
+  },
+  "ReplicaSetError": {
+    "what": "Replica set configuration or connection error",
+    "why": "Replica set not configured, member unavailable, or config issue",
+    "fix": [
+      "Check replica set status: rs.status()",
+      "Verify all members are reachable",
+      "Check replica set configuration",
+      "Ensure primary member is available",
+      "Verify network connectivity between members",
+      "Check replica set member states"
+    ]
+  },
+  "ShardingError": {
+    "what": "MongoDB sharding error",
+    "why": "Shard key issue, balancer problem, or shard unavailable",
+    "fix": [
+      "Check shard status: sh.status()",
+      "Verify shard key is correct",
+      "Check if balancer is running",
+      "Verify all shards are accessible",
+      "Check for shard key migration issues",
+      "Review sharding configuration"
     ]
   }
 }
-

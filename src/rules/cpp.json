@@ -6,7 +6,10 @@
       "Check the file and line number in the error message",
       "Verify all includes are present and correct",
       "Check for missing semicolons, brackets, or parentheses",
-      "Ensure variable types match their usage"
+      "Ensure variable types match their usage",
+      "Check for undefined types or forward declarations",
+      "Verify template syntax is correct",
+      "Check for missing namespace qualifiers"
     ]
   },
   "LinkerError": {
@@ -16,7 +19,10 @@
       "Ensure all source files are compiled and linked",
       "Check that function definitions exist",
       "Verify library paths and library names in linker flags",
-      "Check for name mangling issues (extern \"C\" for C functions)"
+      "Check for name mangling issues (extern \"C\" for C functions)",
+      "Verify all object files are included in link command",
+      "Check for missing library dependencies",
+      "Use -L for library paths, -l for library names"
     ]
   },
   "SegmentationFault": {
@@ -26,7 +32,10 @@
       "Use debugger (gdb) to find the exact location",
       "Check all pointer dereferences for null",
       "Verify array bounds before access",
-      "Use address sanitizer: -fsanitize=address"
+      "Use address sanitizer: -fsanitize=address",
+      "Check for use-after-free with valgrind",
+      "Initialize all pointers before use",
+      "Use smart pointers (unique_ptr, shared_ptr)"
     ]
   },
   "TemplateError": {
@@ -36,7 +45,10 @@
       "Check template parameter types match requirements",
       "Add 'template' keyword before dependent names",
       "Verify template specialization syntax",
-      "Check for missing 'typename' in dependent types"
+      "Check for missing 'typename' in dependent types",
+      "Verify concept constraints are satisfied",
+      "Check template argument deduction",
+      "Use explicit template arguments if needed"
     ]
   },
   "MemoryError": {
@@ -46,8 +58,123 @@
       "Review the sanitizer output for exact location",
       "Check all memory allocations and deallocations",
       "Use smart pointers (unique_ptr, shared_ptr) instead of raw pointers",
-      "Enable all sanitizers: -fsanitize=address,undefined"
+      "Enable all sanitizers: -fsanitize=address,undefined",
+      "Check for buffer overflows in array/string operations",
+      "Verify new/delete or malloc/free pairs match",
+      "Use RAII for automatic memory management"
+    ]
+  },
+  "UndefinedBehavior": {
+    "what": "Undefined behavior detected",
+    "why": "Code invokes undefined behavior (signed overflow, null deref, etc.)",
+    "fix": [
+      "Enable UBSan: -fsanitize=undefined",
+      "Check for signed integer overflow",
+      "Verify pointer arithmetic is valid",
+      "Check for null pointer dereferences",
+      "Avoid left-shifting negative numbers",
+      "Verify array bounds are valid",
+      "Check for uninitialized variable use"
+    ]
+  },
+  "TypeError": {
+    "what": "Type mismatch or conversion error",
+    "why": "Types don't match or implicit conversion failed",
+    "fix": [
+      "Check expected vs actual types in error",
+      "Add explicit type casts if appropriate",
+      "Verify function parameter types",
+      "Check for const correctness issues",
+      "Verify template type parameters",
+      "Check for missing type conversions",
+      "Use static_cast, dynamic_cast appropriately"
+    ]
+  },
+  "NamespaceError": {
+    "what": "Namespace or scope resolution error",
+    "why": "Symbol not found in current namespace or wrong scope",
+    "fix": [
+      "Add using namespace or using declaration",
+      "Use fully qualified name with ::",
+      "Check for namespace conflicts",
+      "Verify using directives are correct",
+      "Check for anonymous namespace issues",
+      "Verify header includes are correct"
+    ]
+  },
+  "IncludeError": {
+    "what": "Header file include error",
+    "why": "Header file not found or include path incorrect",
+    "fix": [
+      "Check include path is correct",
+      "Add include directory: -I/path/to/headers",
+      "Verify header file exists",
+      "Check for case sensitivity issues",
+      "Use angle brackets <> for system headers",
+      "Use quotes \"\" for local headers",
+      "Check include guard conflicts"
+    ]
+  },
+  "ConstError": {
+    "what": "Const correctness error",
+    "why": "Trying to modify const object or missing const qualifier",
+    "fix": [
+      "Add const qualifier to function if it doesn't modify state",
+      "Remove const if modification is needed",
+      "Use const_cast only if absolutely necessary",
+      "Check for const member function issues",
+      "Verify const references are used correctly",
+      "Check mutable keyword usage"
+    ]
+  },
+  "VirtualFunctionError": {
+    "what": "Virtual function or inheritance error",
+    "why": "Virtual function override issue or inheritance problem",
+    "fix": [
+      "Check virtual function signatures match exactly",
+      "Use override keyword to catch mismatches",
+      "Verify base class destructor is virtual",
+      "Check for diamond inheritance issues",
+      "Use virtual inheritance if needed",
+      "Verify pure virtual functions are implemented"
+    ]
+  },
+  "ExceptionError": {
+    "what": "Exception handling error",
+    "why": "Unhandled exception, exception specification mismatch, or throw error",
+    "fix": [
+      "Add try-catch block around throwing code",
+      "Catch specific exception types",
+      "Check exception specifications match",
+      "Verify exceptions are thrown correctly",
+      "Handle all possible exceptions",
+      "Use noexcept if function doesn't throw"
+    ]
+  },
+  "STLError": {
+    "what": "STL container or algorithm error",
+    "why": "Invalid iterator, container state, or algorithm usage",
+    "fix": [
+      "Check iterator validity before use",
+      "Verify container isn't modified during iteration",
+      "Check for iterator invalidation",
+      "Verify algorithm preconditions are met",
+      "Check container bounds before access",
+      "Use appropriate container for use case",
+      "Verify comparator functions are correct"
+    ]
+  },
+  "ThreadError": {
+    "what": "Multithreading error",
+    "why": "Race condition, deadlock, or thread synchronization issue",
+    "fix": [
+      "Use mutexes/locks to protect shared data",
+      "Check for deadlock conditions",
+      "Use atomic operations for simple cases",
+      "Verify thread synchronization is correct",
+      "Check for data races with thread sanitizer",
+      "Use condition variables appropriately",
+      "Avoid shared mutable state when possible"
     ]
   }
 }
-

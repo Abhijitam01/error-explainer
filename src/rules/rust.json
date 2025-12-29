@@ -6,7 +6,10 @@
       "Clone the value if you need to use it multiple times",
       "Use references (&) instead of moving values",
       "Restructure code to avoid conflicting borrows",
-      "Consider using Rc<RefCell<T>> for shared mutable ownership"
+      "Consider using Rc<RefCell<T>> for shared mutable ownership",
+      "Use Arc<Mutex<T>> for thread-safe shared ownership",
+      "Split borrows into separate scopes",
+      "Return owned values instead of references when possible"
     ]
   },
   "LifetimeError": {
@@ -16,7 +19,10 @@
       "Extend the lifetime of the referenced value",
       "Use owned values instead of references",
       "Add explicit lifetime parameters to functions",
-      "Restructure code to ensure values live long enough"
+      "Restructure code to ensure values live long enough",
+      "Use 'static lifetime if value lives for entire program",
+      "Store owned data instead of references in structs",
+      "Use lifetime elision rules where applicable"
     ]
   },
   "TypeMismatch": {
@@ -26,7 +32,10 @@
       "Check the expected type in the error message",
       "Use type conversion (as, into, try_into)",
       "Update function signature to accept the correct type",
-      "Verify generic type parameters are correct"
+      "Verify generic type parameters are correct",
+      "Use type annotations to clarify intent",
+      "Check for trait bounds that need to be satisfied",
+      "Use From/Into traits for conversions"
     ]
   },
   "Panic": {
@@ -36,7 +45,10 @@
       "Replace unwrap() with proper error handling (Result, Option)",
       "Add bounds checking before array access",
       "Use match or if let for Option/Result values",
-      "Add validation before operations that can panic"
+      "Add validation before operations that can panic",
+      "Use get() for safe array access",
+      "Handle errors with ? operator or match",
+      "Use expect() with descriptive messages if panic is acceptable"
     ]
   },
   "CargoError": {
@@ -46,8 +58,129 @@
       "Run 'cargo clean' and rebuild",
       "Check Cargo.toml for correct dependencies",
       "Update Rust toolchain: rustup update",
-      "Verify all dependencies are compatible"
+      "Verify all dependencies are compatible",
+      "Check for feature flag conflicts",
+      "Update dependencies: cargo update",
+      "Check Cargo.lock for conflicts"
+    ]
+  },
+  "TraitBoundError": {
+    "what": "Trait bound not satisfied",
+    "why": "Type doesn't implement required trait",
+    "fix": [
+      "Implement the required trait for your type",
+      "Add trait bound to generic parameter",
+      "Use trait object (dyn Trait) if appropriate",
+      "Check if trait is in scope (use statement)",
+      "Verify trait methods are implemented correctly",
+      "Use where clause for complex bounds"
+    ]
+  },
+  "MoveError": {
+    "what": "Value moved and cannot be used again",
+    "why": "Ownership was transferred and value is no longer available",
+    "fix": [
+      "Clone the value before moving",
+      "Use references instead of owned values",
+      "Restructure to avoid multiple uses after move",
+      "Return value from function if needed later",
+      "Use Rc or Arc for shared ownership",
+      "Split operations to avoid move conflicts"
+    ]
+  },
+  "MutableBorrowError": {
+    "what": "Cannot borrow as mutable",
+    "why": "Value is already borrowed immutably or mutably elsewhere",
+    "fix": [
+      "End the previous borrow before new mutable borrow",
+      "Restructure code to avoid overlapping borrows",
+      "Use interior mutability (RefCell, Mutex) if needed",
+      "Split borrows into separate scopes",
+      "Clone data if multiple mutable borrows needed",
+      "Use unsafe code only if absolutely necessary"
+    ]
+  },
+  "GenericError": {
+    "what": "Generic type parameter error",
+    "why": "Generic type doesn't satisfy constraints or inference failed",
+    "fix": [
+      "Add explicit type annotations",
+      "Specify trait bounds for generic parameters",
+      "Use turbofish syntax: method::<Type>()",
+      "Check generic constraints are satisfied",
+      "Verify associated types are correct",
+      "Use where clause for complex constraints"
+    ]
+  },
+  "AsyncError": {
+    "what": "Async/await error in Rust",
+    "why": "Error in async function, future, or async runtime",
+    "fix": [
+      "Check async function is properly awaited",
+      "Verify Future trait is implemented correctly",
+      "Use tokio or async-std runtime",
+      "Handle errors with .await and ? operator",
+      "Check for blocking code in async context",
+      "Verify Send + Sync bounds for async types"
+    ]
+  },
+  "MacroError": {
+    "what": "Macro expansion or usage error",
+    "why": "Invalid macro syntax or macro expansion failed",
+    "fix": [
+      "Check macro syntax matches documentation",
+      "Verify macro is imported/available",
+      "Check macro arguments are correct",
+      "Use cargo expand to see macro expansion",
+      "Verify procedural macro dependencies",
+      "Check for missing macro features"
+    ]
+  },
+  "ModuleError": {
+    "what": "Module or crate organization error",
+    "why": "Module not found, visibility issue, or circular dependency",
+    "fix": [
+      "Check mod declarations are correct",
+      "Verify use statements import correctly",
+      "Check pub visibility modifiers",
+      "Ensure module files exist in correct location",
+      "Check for circular module dependencies",
+      "Verify crate structure matches Cargo.toml"
+    ]
+  },
+  "ConstError": {
+    "what": "Const context or evaluation error",
+    "why": "Operation not allowed in const context or const evaluation failed",
+    "fix": [
+      "Move non-const code out of const function",
+      "Use const-compatible operations only",
+      "Check const fn restrictions",
+      "Use runtime evaluation instead of const",
+      "Verify const values are computable at compile time"
+    ]
+  },
+  "UnsafeError": {
+    "what": "Unsafe code error or safety violation",
+    "why": "Unsafe block has safety requirements that aren't met",
+    "fix": [
+      "Review unsafe block safety invariants",
+      "Add safety comments documenting invariants",
+      "Verify pointer operations are valid",
+      "Check for undefined behavior",
+      "Use safe abstractions when possible",
+      "Follow Rust unsafe code guidelines"
+    ]
+  },
+  "TestError": {
+    "what": "Rust test failure",
+    "why": "Test assertion failed or test panicked",
+    "fix": [
+      "Check test assertion that failed",
+      "Verify test data and expected values",
+      "Run test with --nocapture to see output",
+      "Check for panics in test code",
+      "Verify test setup and teardown",
+      "Use should_panic for expected panics"
     ]
   }
 }
-

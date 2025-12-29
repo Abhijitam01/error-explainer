@@ -7,7 +7,9 @@
       "Create the missing table: CREATE TABLE <name>",
       "Verify you're connected to correct database",
       "Check schema: SELECT * FROM information_schema.tables",
-      "Use schema prefix if needed: schema.table_name"
+      "Use schema prefix if needed: schema.table_name",
+      "Check if table is in different schema",
+      "Verify migrations have run successfully"
     ]
   },
   "AuthenticationFailed": {
@@ -18,7 +20,9 @@
       "Check pg_hba.conf allows your connection method",
       "Reset password: ALTER USER <name> WITH PASSWORD '<newpass>'",
       "Verify user exists: SELECT * FROM pg_user",
-      "Check connection string format: postgresql://user:pass@host:port/db"
+      "Check connection string format: postgresql://user:pass@host:port/db",
+      "Check pg_hba.conf for IP restrictions",
+      "Verify SSL mode if required"
     ]
   },
   "SyntaxError": {
@@ -29,8 +33,165 @@
       "Verify SQL keywords are spelled correctly",
       "Check for reserved word conflicts (use quotes if needed)",
       "Validate column names exist in referenced tables",
-      "Use PostgreSQL documentation to verify syntax"
+      "Use PostgreSQL documentation to verify syntax",
+      "Check for unclosed strings or comments",
+      "Verify function call syntax is correct"
+    ]
+  },
+  "UndefinedColumn": {
+    "what": "Column doesn't exist in table",
+    "why": "Column name is misspelled, column wasn't created, or wrong table",
+    "fix": [
+      "Check column name spelling and case",
+      "Verify column exists: \\d <table_name> in psql",
+      "Check if column is in different table",
+      "Verify table structure: SELECT * FROM information_schema.columns",
+      "Add missing column: ALTER TABLE ADD COLUMN",
+      "Check for schema prefix needed"
+    ]
+  },
+  "UndefinedFunction": {
+    "what": "Function doesn't exist or wrong number of arguments",
+    "why": "Function name misspelled, not installed, or argument mismatch",
+    "fix": [
+      "Check function name spelling",
+      "Verify function exists: \\df in psql",
+      "Check argument types and count match",
+      "Install required extension if function is from extension",
+      "Verify function is in correct schema",
+      "Check PostgreSQL version supports the function"
+    ]
+  },
+  "UniqueViolation": {
+    "what": "Unique constraint violation",
+    "why": "Trying to insert duplicate value in unique column",
+    "fix": [
+      "Check which column has duplicate value",
+      "Use ON CONFLICT DO UPDATE if appropriate",
+      "Remove duplicate row first",
+      "Change unique constraint if duplicates should be allowed",
+      "Use INSERT ... ON CONFLICT DO NOTHING",
+      "Check for existing row before insert"
+    ]
+  },
+  "ForeignKeyViolation": {
+    "what": "Foreign key constraint violation",
+    "why": "Referenced row doesn't exist or trying to delete referenced row",
+    "fix": [
+      "Check referenced table has the required row",
+      "Insert parent row before child row",
+      "Use CASCADE delete if appropriate",
+      "Check foreign key constraint definition",
+      "Verify referenced column values exist",
+      "Update or delete referenced row first"
+    ]
+  },
+  "NotNullViolation": {
+    "what": "NOT NULL constraint violation",
+    "why": "Trying to insert NULL into column that doesn't allow NULL",
+    "fix": [
+      "Check which column requires a value",
+      "Provide value for NOT NULL column",
+      "Set default value if appropriate",
+      "Modify column to allow NULL if needed",
+      "Check for DEFAULT constraint",
+      "Verify data includes all required fields"
+    ]
+  },
+  "CheckViolation": {
+    "what": "Check constraint violation",
+    "why": "Value doesn't satisfy check constraint",
+    "fix": [
+      "Check constraint definition to see requirements",
+      "Verify value meets constraint condition",
+      "Update value to satisfy constraint",
+      "Modify constraint if requirements changed",
+      "Check constraint: SELECT * FROM pg_constraint"
+    ]
+  },
+  "DeadlockDetected": {
+    "what": "Database deadlock detected",
+    "why": "Two transactions waiting for each other's locks",
+    "fix": [
+      "Retry the transaction (deadlocks are usually transient)",
+      "Reduce transaction scope/duration",
+      "Access tables in consistent order",
+      "Use lower isolation level if appropriate",
+      "Check for long-running transactions",
+      "Optimize queries to reduce lock time"
+    ]
+  },
+  "ConnectionError": {
+    "what": "PostgreSQL connection error",
+    "why": "Cannot connect to database server",
+    "fix": [
+      "Check PostgreSQL server is running",
+      "Verify host, port, and database name",
+      "Check firewall/network connectivity",
+      "Verify max_connections not exceeded",
+      "Check pg_hba.conf allows connection",
+      "Test with psql command line tool",
+      "Verify SSL configuration if required"
+    ]
+  },
+  "TransactionError": {
+    "what": "Transaction error or rollback",
+    "why": "Error in transaction causing rollback",
+    "fix": [
+      "Check specific error within transaction",
+      "Use SAVEPOINT for partial rollbacks",
+      "Handle errors with exception blocks",
+      "Verify all operations in transaction are valid",
+      "Check for constraint violations",
+      "Ensure transaction is properly committed"
+    ]
+  },
+  "LockError": {
+    "what": "Lock timeout or lock conflict",
+    "why": "Couldn't acquire lock within timeout or lock conflict",
+    "fix": [
+      "Increase lock_timeout if appropriate",
+      "Check for long-running transactions holding locks",
+      "Kill blocking queries if necessary",
+      "Use NOWAIT option to fail fast",
+      "Check pg_locks for lock information",
+      "Optimize queries to reduce lock duration"
+    ]
+  },
+  "OutOfMemory": {
+    "what": "PostgreSQL out of memory error",
+    "why": "Query or operation requires more memory than available",
+    "fix": [
+      "Increase work_mem or shared_buffers",
+      "Optimize query to use less memory",
+      "Add LIMIT to large result sets",
+      "Use streaming/cursor for large queries",
+      "Check for memory leaks in functions",
+      "Restart PostgreSQL if memory is exhausted"
+    ]
+  },
+  "DiskFull": {
+    "what": "Disk full error",
+    "why": "Database disk is full or quota exceeded",
+    "fix": [
+      "Free up disk space",
+      "Check disk usage: df -h",
+      "Vacuum database to reclaim space",
+      "Delete old data or archive",
+      "Increase disk quota if applicable",
+      "Check for large temporary files"
+    ]
+  },
+  "PermissionDenied": {
+    "what": "Permission denied for operation",
+    "why": "User doesn't have required privileges",
+    "fix": [
+      "Grant required privileges: GRANT SELECT ON table TO user",
+      "Check user role and permissions",
+      "Verify ownership of objects",
+      "Use superuser if needed for admin operations",
+      "Check schema permissions",
+      "Verify user has USAGE on schema"
     ]
   }
 }
-

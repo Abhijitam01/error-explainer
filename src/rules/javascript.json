@@ -6,7 +6,9 @@
       "Check if the variable/function name is spelled correctly",
       "Ensure the variable is declared before use (use const/let/var)",
       "Verify imports if it's from another module",
-      "Check variable scope (global vs local)"
+      "Check variable scope (global vs local)",
+      "For functions, check if they're hoisted (function declarations vs expressions)",
+      "Verify the module/file is imported correctly"
     ]
   },
   "TypeError": {
@@ -16,7 +18,9 @@
       "Add null/undefined checks before accessing properties",
       "Use optional chaining (?.) to safely access nested properties",
       "Verify the variable has the expected type before operations",
-      "Check if objects/arrays are initialized before use"
+      "Check if objects/arrays are initialized before use",
+      "Use type guards or typeof checks",
+      "Consider using default values: obj?.prop ?? defaultValue"
     ]
   },
   "SyntaxError": {
@@ -26,7 +30,10 @@
       "Check for missing brackets, parentheses, or quotes",
       "Verify semicolons are used correctly",
       "Look for typos in keywords (const vs var, function vs fn)",
-      "Check for unclosed strings or template literals"
+      "Check for unclosed strings or template literals",
+      "Verify arrow function syntax: () => {}",
+      "Check for missing commas in objects/arrays",
+      "Ensure template literals use backticks, not quotes"
     ]
   },
   "RangeError": {
@@ -35,7 +42,9 @@
     "fix": [
       "Check array indices are within bounds (0 to length-1)",
       "Verify numeric values are within expected ranges",
-      "Use array.length checks before accessing elements"
+      "Use array.length checks before accessing elements",
+      "Check for negative array indices",
+      "Verify stack size isn't exceeded (recursion depth)"
     ]
   },
   "EvalError": {
@@ -44,7 +53,9 @@
     "fix": [
       "Avoid using eval() - use safer alternatives",
       "If necessary, validate input before passing to eval()",
-      "Consider using Function constructor or JSON.parse() instead"
+      "Consider using Function constructor or JSON.parse() instead",
+      "Use template literals or string interpolation instead",
+      "Consider using a proper parser for dynamic code"
     ]
   },
   "URIError": {
@@ -53,8 +64,144 @@
     "fix": [
       "Validate URI strings before encoding/decoding",
       "Use try-catch around URI operations",
-      "Check URI format matches expected pattern"
+      "Check URI format matches expected pattern",
+      "Use URL constructor for validation: new URL(uri)",
+      "Escape special characters properly"
+    ]
+  },
+  "InternalError": {
+    "what": "Internal JavaScript engine error",
+    "why": "Stack overflow, too much recursion, or engine bug",
+    "fix": [
+      "Check for infinite recursion or loops",
+      "Reduce stack depth by refactoring recursive functions",
+      "Use iterative solutions instead of recursive ones",
+      "Increase stack size if possible (Node.js: --stack-size)",
+      "Break large operations into smaller chunks"
+    ]
+  },
+  "PromiseRejection": {
+    "what": "Unhandled promise rejection",
+    "why": "Promise was rejected but no .catch() or try/catch handled it",
+    "fix": [
+      "Add .catch() handler to promises",
+      "Use async/await with try/catch blocks",
+      "Handle errors in Promise.all() with .catch()",
+      "Add global unhandledRejection handler",
+      "Ensure all async functions have error handling"
+    ]
+  },
+  "AsyncError": {
+    "what": "Error in async function or promise chain",
+    "why": "Exception thrown in async code without proper error handling",
+    "fix": [
+      "Wrap async code in try/catch blocks",
+      "Add .catch() to promise chains",
+      "Check if function is marked as async",
+      "Verify await is used correctly",
+      "Handle errors in Promise.allSettled() or Promise.all()"
+    ]
+  },
+  "ImportError": {
+    "what": "Failed to import module or dependency",
+    "why": "Module not found, circular dependency, or export mismatch",
+    "fix": [
+      "Verify the import path is correct",
+      "Check if package is installed: npm list <package>",
+      "Look for circular dependencies",
+      "Verify exports match imports (default vs named)",
+      "Check file extensions (.js, .mjs, .ts)",
+      "Ensure module type is correct (ESM vs CommonJS)"
+    ]
+  },
+  "ExportError": {
+    "what": "Failed to export from module",
+    "why": "Invalid export syntax or conflicting exports",
+    "fix": [
+      "Check export syntax (export default vs export const)",
+      "Verify only one default export per module",
+      "Ensure exports match import expectations",
+      "Check for conflicting named exports",
+      "Verify module type supports the export syntax"
+    ]
+  },
+  "CircularDependency": {
+    "what": "Circular dependency between modules",
+    "why": "Module A imports B, and B imports A (directly or indirectly)",
+    "fix": [
+      "Refactor to break the circular dependency",
+      "Move shared code to a third module",
+      "Use dynamic imports: import()",
+      "Extract common functionality to a separate file",
+      "Restructure module dependencies"
+    ]
+  },
+  "MemoryError": {
+    "what": "Out of memory or memory leak",
+    "why": "Too much memory allocated or memory not released",
+    "fix": [
+      "Check for memory leaks (event listeners, timers)",
+      "Clear large arrays/objects when done",
+      "Use weak references (WeakMap, WeakSet) where appropriate",
+      "Increase Node.js memory: node --max-old-space-size=4096",
+      "Profile memory usage with Chrome DevTools"
+    ]
+  },
+  "TimeoutError": {
+    "what": "Operation timed out",
+    "why": "Async operation took too long to complete",
+    "fix": [
+      "Increase timeout value if operation is legitimate",
+      "Check for hanging promises or async operations",
+      "Add timeout handling: Promise.race() with timeout",
+      "Verify network requests aren't stuck",
+      "Check for infinite loops in async code"
+    ]
+  },
+  "NetworkError": {
+    "what": "Network request failed",
+    "why": "Connection refused, timeout, or network unavailable",
+    "fix": [
+      "Check network connectivity",
+      "Verify URL/endpoint is correct",
+      "Check CORS settings if browser",
+      "Verify firewall/proxy settings",
+      "Test with curl or Postman",
+      "Check SSL/certificate issues"
+    ]
+  },
+  "ValidationError": {
+    "what": "Data validation failed",
+    "why": "Input doesn't match expected format or constraints",
+    "fix": [
+      "Check validation rules and error message",
+      "Verify input format matches requirements",
+      "Add proper validation before processing",
+      "Check required fields are present",
+      "Validate data types and ranges"
+    ]
+  },
+  "PermissionError": {
+    "what": "Permission denied for operation",
+    "why": "Insufficient permissions for file system or resource access",
+    "fix": [
+      "Check file/folder permissions: chmod",
+      "Verify user has required permissions",
+      "Run with appropriate privileges if needed",
+      "Check file ownership: chown",
+      "Verify path exists and is accessible"
+    ]
+  },
+  "FileNotFound": {
+    "what": "File or directory not found",
+    "why": "Path is incorrect, file doesn't exist, or wrong working directory",
+    "fix": [
+      "Verify the file path is correct",
+      "Check if file exists: fs.existsSync() or ls",
+      "Verify working directory is correct",
+      "Check for typos in filename",
+      "Use absolute paths if relative paths fail",
+      "Check file permissions"
     ]
   }
 }
-

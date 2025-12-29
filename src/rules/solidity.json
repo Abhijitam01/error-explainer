@@ -6,7 +6,10 @@
       "Check the file and line number in error message",
       "Verify all imports are correct",
       "Check for missing semicolons or brackets",
-      "Ensure variable types match their usage"
+      "Ensure variable types match their usage",
+      "Verify pragma version is compatible",
+      "Check for reserved keyword usage",
+      "Verify function visibility modifiers"
     ]
   },
   "RevertError": {
@@ -16,7 +19,10 @@
       "Check the revert reason in the error message",
       "Verify all require() conditions are met",
       "Review contract logic for revert conditions",
-      "Check if contract state allows the operation"
+      "Check if contract state allows the operation",
+      "Verify function modifiers are satisfied",
+      "Check for access control restrictions",
+      "Review custom error messages"
     ]
   },
   "RequireError": {
@@ -26,7 +32,10 @@
       "Check the require condition that failed",
       "Verify inputs meet the requirement",
       "Review contract state before the require",
-      "Add better error messages to require() statements"
+      "Add better error messages to require() statements",
+      "Check for overflow/underflow in conditions",
+      "Verify all preconditions are met",
+      "Review business logic requirements"
     ]
   },
   "GasError": {
@@ -36,7 +45,10 @@
       "Increase gas limit in transaction",
       "Optimize contract code to reduce gas usage",
       "Break transaction into smaller operations",
-      "Check for infinite loops or excessive storage operations"
+      "Check for infinite loops or excessive storage operations",
+      "Use events instead of storage for logging",
+      "Optimize loops and reduce iterations",
+      "Check for unnecessary storage writes"
     ]
   },
   "DeploymentError": {
@@ -46,8 +58,159 @@
       "Check constructor parameters are correct",
       "Increase gas limit for deployment",
       "Verify network connection",
-      "Check contract bytecode size limits"
+      "Check contract bytecode size limits",
+      "Verify constructor logic doesn't revert",
+      "Check for constructor access control",
+      "Verify all constructor dependencies"
+    ]
+  },
+  "TypeError": {
+    "what": "Type mismatch or conversion error",
+    "why": "Variable types don't match or implicit conversion failed",
+    "fix": [
+      "Check expected vs actual types",
+      "Use explicit type conversions",
+      "Verify function parameter types",
+      "Check for address vs address payable",
+      "Verify uint/int size matches",
+      "Check for bytes vs string issues",
+      "Use type() for type checking"
+    ]
+  },
+  "VisibilityError": {
+    "what": "Function or variable visibility error",
+    "why": "Accessing private/internal from wrong context or missing visibility",
+    "fix": [
+      "Add correct visibility modifier (public, private, internal, external)",
+      "Check if function can be called from current context",
+      "Verify state variable visibility",
+      "Check for external function restrictions",
+      "Review access control logic",
+      "Verify inheritance visibility rules"
+    ]
+  },
+  "OverrideError": {
+    "what": "Function override error",
+    "why": "Override keyword missing or function signature mismatch",
+    "fix": [
+      "Add override keyword to overriding function",
+      "Verify function signature matches base contract",
+      "Check for multiple inheritance conflicts",
+      "Use virtual keyword in base function",
+      "Verify inheritance chain is correct",
+      "Check for interface implementation"
+    ]
+  },
+  "StorageError": {
+    "what": "Storage or memory error",
+    "why": "Incorrect storage location or storage collision",
+    "fix": [
+      "Use memory for local variables",
+      "Use storage for state variables",
+      "Check for storage pointer issues",
+      "Verify storage layout doesn't conflict",
+      "Use calldata for external function parameters",
+      "Check for storage array issues",
+      "Verify struct storage location"
+    ]
+  },
+  "OverflowError": {
+    "what": "Integer overflow or underflow",
+    "why": "Arithmetic operation exceeds type limits",
+    "fix": [
+      "Use SafeMath library (Solidity <0.8.0)",
+      "Check for unchecked blocks (Solidity >=0.8.0)",
+      "Verify arithmetic won't overflow",
+      "Use larger integer types if needed",
+      "Add bounds checking before operations",
+      "Check for division by zero",
+      "Use SafeMath functions for arithmetic"
+    ]
+  },
+  "EventError": {
+    "what": "Event emission or indexing error",
+    "why": "Event not defined, wrong parameters, or indexing issue",
+    "fix": [
+      "Check event is declared in contract",
+      "Verify event parameters match declaration",
+      "Check indexed parameter count (max 3)",
+      "Verify event is emitted correctly",
+      "Check for event parameter types",
+      "Review event signature"
+    ]
+  },
+  "ModifierError": {
+    "what": "Function modifier error",
+    "why": "Modifier logic failed or modifier not applied correctly",
+    "fix": [
+      "Check modifier condition that failed",
+      "Verify modifier is applied to function",
+      "Review modifier logic",
+      "Check for modifier ordering issues",
+      "Verify modifier doesn't revert unexpectedly",
+      "Check for access control in modifier"
+    ]
+  },
+  "InheritanceError": {
+    "what": "Contract inheritance error",
+    "why": "Inheritance conflict, linearization issue, or missing override",
+    "fix": [
+      "Check inheritance order (most base-like first)",
+      "Add override keyword where needed",
+      "Resolve function signature conflicts",
+      "Verify constructor parameters",
+      "Check for diamond inheritance issues",
+      "Review inheritance hierarchy"
+    ]
+  },
+  "ABIError": {
+    "what": "ABI encoding or decoding error",
+    "why": "Function call data doesn't match ABI or encoding failed",
+    "fix": [
+      "Verify function signature is correct",
+      "Check parameter types match ABI",
+      "Verify function exists in contract",
+      "Check for ABI encoding issues",
+      "Use abi.encode/abi.decode correctly",
+      "Verify function selector is correct"
+    ]
+  },
+  "LibraryError": {
+    "what": "Library linking or usage error",
+    "why": "Library not linked, function not found, or usage error",
+    "fix": [
+      "Link library before deployment",
+      "Verify library address is correct",
+      "Check library function exists",
+      "Use library functions correctly: LibName.function()",
+      "Verify library is deployed",
+      "Check for library linking in deployment script"
+    ]
+  },
+  "HardhatError": {
+    "what": "Hardhat framework error",
+    "why": "Hardhat configuration, network, or script error",
+    "fix": [
+      "Check hardhat.config.js for errors",
+      "Verify network configuration",
+      "Check for missing dependencies",
+      "Verify contract compilation",
+      "Check for script syntax errors",
+      "Verify Hardhat version compatibility",
+      "Check for plugin conflicts"
+    ]
+  },
+  "TruffleError": {
+    "what": "Truffle framework error",
+    "why": "Truffle configuration, migration, or deployment error",
+    "fix": [
+      "Check truffle-config.js for errors",
+      "Verify network configuration",
+      "Check migration files for errors",
+      "Verify contract compilation",
+      "Check for missing dependencies",
+      "Verify Truffle version compatibility",
+      "Check for migration ordering issues"
     ]
   }
 }
-
