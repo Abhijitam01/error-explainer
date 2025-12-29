@@ -1,0 +1,36 @@
+{
+  "HydrationError": {
+    "what": "Server-rendered HTML doesn't match client-rendered HTML",
+    "why": "Different output between server and client render, often from browser APIs or random values",
+    "fix": [
+      "Remove browser-only APIs (window, document) from initial render",
+      "Use useEffect for client-only code",
+      "Avoid Date.now() or Math.random() in render",
+      "Check for conditional rendering based on client state",
+      "Use suppressHydrationWarning only as last resort"
+    ]
+  },
+  "ModuleNotFound": {
+    "what": "Cannot find module or file to import",
+    "why": "Import path is incorrect, file doesn't exist, or package isn't installed",
+    "fix": [
+      "Verify the import path is correct (check typos)",
+      "Ensure the file exists at the specified location",
+      "Install missing npm packages: npm install <package>",
+      "Check if using .js extension when needed (or remove it)",
+      "Verify tsconfig.json paths configuration"
+    ]
+  },
+  "ServerClientMismatch": {
+    "what": "Different behavior between server and client components",
+    "why": "Code behaves differently in server vs client environment",
+    "fix": [
+      "Mark component with 'use client' directive if it needs browser APIs",
+      "Use 'use server' for server-only code",
+      "Move client-only logic to useEffect hooks",
+      "Check for environment-specific code (process.env, window checks)",
+      "Ensure consistent data fetching on both server and client"
+    ]
+  }
+}
+

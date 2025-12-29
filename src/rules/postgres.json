@@ -1,0 +1,36 @@
+{
+  "RelationNotFound": {
+    "what": "Table or view doesn't exist in database",
+    "why": "Table name is misspelled, table wasn't created, or wrong schema",
+    "fix": [
+      "Check table name spelling and case sensitivity",
+      "Create the missing table: CREATE TABLE <name>",
+      "Verify you're connected to correct database",
+      "Check schema: SELECT * FROM information_schema.tables",
+      "Use schema prefix if needed: schema.table_name"
+    ]
+  },
+  "AuthenticationFailed": {
+    "what": "PostgreSQL authentication credentials are invalid",
+    "why": "Wrong username/password or user doesn't exist",
+    "fix": [
+      "Verify username and password in connection string",
+      "Check pg_hba.conf allows your connection method",
+      "Reset password: ALTER USER <name> WITH PASSWORD '<newpass>'",
+      "Verify user exists: SELECT * FROM pg_user",
+      "Check connection string format: postgresql://user:pass@host:port/db"
+    ]
+  },
+  "SyntaxError": {
+    "what": "Invalid SQL syntax in query",
+    "why": "SQL statement doesn't follow PostgreSQL grammar rules",
+    "fix": [
+      "Check for missing commas, quotes, or parentheses",
+      "Verify SQL keywords are spelled correctly",
+      "Check for reserved word conflicts (use quotes if needed)",
+      "Validate column names exist in referenced tables",
+      "Use PostgreSQL documentation to verify syntax"
+    ]
+  }
+}
+

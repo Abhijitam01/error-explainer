@@ -1,0 +1,36 @@
+{
+  "ConnectionRefused": {
+    "what": "Cannot connect to MongoDB server",
+    "why": "MongoDB server is not running, wrong host/port, or network issue",
+    "fix": [
+      "Start MongoDB service: mongod or systemctl start mongod",
+      "Verify connection string (host, port) is correct",
+      "Check if MongoDB is listening on expected port (default: 27017)",
+      "Verify firewall/network allows connection",
+      "Test connection with mongosh or MongoDB Compass"
+    ]
+  },
+  "AuthenticationFailed": {
+    "what": "MongoDB authentication credentials are invalid",
+    "why": "Wrong username/password or user doesn't have required permissions",
+    "fix": [
+      "Verify username and password in connection string",
+      "Check if user exists: db.getUsers()",
+      "Create user if missing: db.createUser()",
+      "Verify user has required roles/permissions",
+      "Check connection string format: mongodb://user:pass@host:port/db"
+    ]
+  },
+  "SchemaValidationError": {
+    "what": "Document doesn't match collection schema validation rules",
+    "why": "Data violates schema constraints (required fields, types, patterns)",
+    "fix": [
+      "Check which field failed validation in error message",
+      "Verify field types match schema (string, number, date, etc.)",
+      "Ensure required fields are present",
+      "Check field value constraints (min/max, pattern, enum)",
+      "Review collection validation rules: db.getCollectionInfos()"
+    ]
+  }
+}
+

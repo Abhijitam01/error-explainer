@@ -1,0 +1,60 @@
+{
+  "ReferenceError": {
+    "what": "Variable or function is used before it's declared or doesn't exist",
+    "why": "The code references a name that hasn't been defined in the current scope",
+    "fix": [
+      "Check if the variable/function name is spelled correctly",
+      "Ensure the variable is declared before use (use const/let/var)",
+      "Verify imports if it's from another module",
+      "Check variable scope (global vs local)"
+    ]
+  },
+  "TypeError": {
+    "what": "Operation performed on wrong data type or null/undefined value",
+    "why": "Trying to access properties or methods on undefined/null or incompatible types",
+    "fix": [
+      "Add null/undefined checks before accessing properties",
+      "Use optional chaining (?.) to safely access nested properties",
+      "Verify the variable has the expected type before operations",
+      "Check if objects/arrays are initialized before use"
+    ]
+  },
+  "SyntaxError": {
+    "what": "Invalid JavaScript syntax in code",
+    "why": "Code doesn't follow JavaScript grammar rules",
+    "fix": [
+      "Check for missing brackets, parentheses, or quotes",
+      "Verify semicolons are used correctly",
+      "Look for typos in keywords (const vs var, function vs fn)",
+      "Check for unclosed strings or template literals"
+    ]
+  },
+  "RangeError": {
+    "what": "Value is outside allowed range",
+    "why": "Numeric value exceeds limits or array index is invalid",
+    "fix": [
+      "Check array indices are within bounds (0 to length-1)",
+      "Verify numeric values are within expected ranges",
+      "Use array.length checks before accessing elements"
+    ]
+  },
+  "EvalError": {
+    "what": "Error in eval() function usage",
+    "why": "Invalid code passed to eval() or eval() not allowed in strict mode",
+    "fix": [
+      "Avoid using eval() - use safer alternatives",
+      "If necessary, validate input before passing to eval()",
+      "Consider using Function constructor or JSON.parse() instead"
+    ]
+  },
+  "URIError": {
+    "what": "Invalid URI handling",
+    "why": "Malformed URI passed to encodeURI/decodeURI functions",
+    "fix": [
+      "Validate URI strings before encoding/decoding",
+      "Use try-catch around URI operations",
+      "Check URI format matches expected pattern"
+    ]
+  }
+}
+
