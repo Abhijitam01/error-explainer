@@ -10,10 +10,22 @@ export interface Config {
   retries?: number; // Number of retries for failed commands
   aiProvider?: 'gemini' | 'openai' | 'anthropic';
   aiApiKey?: string;
+  aiModel?: string; // Model name for AI provider
   cacheEnabled?: boolean;
   cacheDir?: string;
   outputFormat?: 'text' | 'json' | 'markdown';
   verbose?: boolean;
+  context?: {
+    enabled?: boolean; // Enable context-aware analysis
+    depth?: number; // Max depth for file structure analysis
+    includeCodeSnippets?: boolean; // Include code snippets in context
+    maxFiles?: number; // Max number of files to analyze
+  };
+  fixes?: {
+    autoApply?: boolean; // Auto-apply fixes without confirmation
+    preview?: boolean; // Preview fixes before applying
+    backup?: boolean; // Backup files before applying fixes
+  };
   rules?: {
     enabled?: string[]; // List of enabled rule sets
     customPath?: string; // Path to custom rules
@@ -28,6 +40,17 @@ const defaultConfig: Config = {
   cacheDir: join(process.cwd(), '.error-explain-cache'),
   outputFormat: 'text',
   verbose: false,
+  context: {
+    enabled: true,
+    depth: 3,
+    includeCodeSnippets: true,
+    maxFiles: 50
+  },
+  fixes: {
+    autoApply: false,
+    preview: true,
+    backup: true
+  },
   rules: {
     enabled: [],
     customPath: undefined
@@ -110,6 +133,16 @@ export function getConfig(): Config {
     ...fileConfig,
     ...envConfig,
     // Merge nested objects
+    context: {
+      ...defaultConfig.context,
+      ...fileConfig.context,
+      ...envConfig.context
+    },
+    fixes: {
+      ...defaultConfig.fixes,
+      ...fileConfig.fixes,
+      ...envConfig.fixes
+    },
     rules: {
       ...defaultConfig.rules,
       ...fileConfig.rules,
