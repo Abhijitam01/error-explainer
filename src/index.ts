@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { runCommand } from './runner.js';
 import { detectStack } from './detector.js';
 import { parseJavaScriptError } from './parser/javascript.js';
@@ -9,26 +12,73 @@ import { parsePostgresError } from './parser/postgres.js';
 import { explainError } from './explainer.js';
 import chalk from 'chalk';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+function showHelp() {
+  console.log(chalk.bold('error-explain - AI-powered error explanation tool\n'));
+  console.log('Usage:');
+  console.log('  explain <command>     Run command and explain any errors\n');
+  console.log('Examples:');
+  console.log('  explain npm run build');
+  console.log('  explain node script.js');
+  console.log('  explain next dev\n');
+  console.log('Options:');
+  console.log('  --help, -h     Show this help message');
+  console.log('  --version, -v  Show version number\n');
+  console.log('Environment Variables:');
+  console.log('  GEMINI_API_KEY  API key for AI-powered explanations (optional)');
+}
+
+function showVersion() {
+  try {
+    const pkgPath = join(__dirname, '..', 'package.json');
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+    console.log(pkg.version);
+  } catch {
+    console.log('1.0.0');
+  }
+}
+
 async function main() {
   const args = process.argv.slice(2);
   
-  if (args.length === 0) {
-    console.error(chalk.red('❌ Error: No command provided'));
-    console.log('Usage: explain <command>');
-    process.exit(1);
+  // Handle flags
+  if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
+    showHelp();
+    process.exit(args.length === 0 ? 1 : 0);
+  }
+  
+  if (args[0] === '--version' || args[0] === '-v') {
+    showVersion();
+    process.exit(0);
   }
 
   // Run the command
-  const { stdout, stderr, exitCode } = await runCommand(args);
+  let stdout: string;
+  let stderr: string;
+  let exitCode: number | null;
+  
+  try {
+    const result = await runCommand(args);
+    stdout = result.stdout;
+    stderr = result.stderr;
+    exitCode = result.exitCode;
+  } catch (error) {
+    console.error(chalk.red('❌ Failed to execute command:'), error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
   
   // Only process if there's an error (non-zero exit code or stderr)
   if (exitCode === 0 && !stderr) {
-    console.log(stdout);
+    if (stdout) {
+      console.log(stdout);
+    }
     process.exit(0);
   }
 
   // Combine stdout and stderr for detection
-  const errorOutput = stderr || stdout;
+  const errorOutput = stderr || stdout || 'Unknown error occurred';
   
   // Detect stack
   const stack = detectStack(errorOutput);

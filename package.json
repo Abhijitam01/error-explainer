@@ -28,11 +28,11 @@
     "ai",
     "gemini"
   ],
-  "author": "",
+  "author": "abhijitam",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/abhijitam/error-explain"
   },
   "engines": {
     "node": ">=18.0.0"
