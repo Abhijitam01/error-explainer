@@ -6,6 +6,8 @@ import { analyzeFileStructure, readCodeFile } from './codebase.js';
 
 export class ContextAnalyzer {
   private cache: Map<string, CodebaseContext> = new Map();
+  private cacheTimestamps: Map<string, number> = new Map();
+  private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   /**
    * Analyze codebase context for error explanation
@@ -18,9 +20,17 @@ export class ContextAnalyzer {
     const resolvedRoot = resolve(workspaceRoot);
     const cacheKey = `${resolvedRoot}:${errorFile || ''}:${errorLine || ''}`;
 
-    // Check cache
+    // Check cache with TTL
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
+      const timestamp = this.cacheTimestamps.get(cacheKey) || 0;
+      const now = Date.now();
+      if (now - timestamp < this.CACHE_TTL) {
+        return this.cache.get(cacheKey)!;
+      } else {
+        // Cache expired, remove it
+        this.cache.delete(cacheKey);
+        this.cacheTimestamps.delete(cacheKey);
+      }
     }
 
     const config = analyzeProjectConfig(resolvedRoot);
@@ -48,8 +58,9 @@ export class ContextAnalyzer {
       workspaceRoot: resolvedRoot
     };
 
-    // Cache for a short time (could be improved with TTL)
+    // Cache with timestamp
     this.cache.set(cacheKey, context);
+    this.cacheTimestamps.set(cacheKey, Date.now());
 
     return context;
   }
@@ -66,6 +77,17 @@ export class ContextAnalyzer {
    */
   clearCache(): void {
     this.cache.clear();
+    this.cacheTimestamps.clear();
+  }
+
+  /**
+   * Get cache statistics
+   */
+  getCacheStats(): { size: number; keys: string[] } {
+    return {
+      size: this.cache.size,
+      keys: Array.from(this.cache.keys())
+    };
   }
 }
 
