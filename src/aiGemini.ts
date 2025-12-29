@@ -1,9 +1,29 @@
-export async function explainWithGemini(errorText: string): Promise<string | null> {
+export async function explainWithGemini(stack: string, errorType: string | undefined, message: string | undefined): Promise<string | null> {
   const apiKey = process.env.GEMINI_API_KEY;
   
   if (!apiKey) {
     return null;
   }
+
+  const prompt = `You are a senior engineer.
+
+Explain this error briefly.
+
+Rules:
+- Bullet points only
+- No theory
+- No assumptions
+- No long explanations
+
+Error:
+Stack: ${stack}
+Type: ${errorType || 'unknown'}
+Message: ${message || 'N/A'}
+
+Format:
+What happened:
+Why it happens:
+How to fix:`;
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
@@ -16,7 +36,7 @@ export async function explainWithGemini(errorText: string): Promise<string | nul
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: errorText
+            text: prompt
           }]
         }]
       })
